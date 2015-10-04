@@ -72,7 +72,8 @@ if [ ! -s /opt/etherpad/config/settings.json ]; then
         "cert" : "$ETHERPAD_SSL_CERT",
         "ca": $ETHERPAD_SSL_CA
     },
-SSL fi
+SSL
+fi
 
 
     #
@@ -108,7 +109,8 @@ SSL fi
         "database": "$ETHERPAD_DB_DATABASE"
         "port"    : "$ETHERPAD_DB_PORT"
     },
-DBPOSTGRES ;;
+DBPOSTGRES
+        ;;
         'mysql')
             # required!
             if [ -z ${ETHERPAD_DB_PASSWORD+x} ]; then
@@ -133,7 +135,8 @@ DBPOSTGRES ;;
         "database": "$ETHERPAD_DB_DATABASE"
         "port"    : "$ETHERPAD_DB_PORT"
     },
-DBMYSQL ;;
+DBMYSQL
+        ;;
         'sqlite')
             ETHERPAD_DB_FILENAME="${ETHERPAD_DB_FILENAME:-var/database.sqlite}"
             read -r -d '' ETHERPAD_DATABASE <<DBSQLITE
@@ -141,7 +144,7 @@ DBMYSQL ;;
     "dbSettings" : {
         "filename" : "$ETHERPAD_DB_FILENAME"
     },
-DBSQLITE ;;
+DBSQLITE
         ;;
         'dirty')
             ETHERPAD_DB_FILENAME="${ETHERPAD_DB_FILENAME:-var/dirty.db}"
@@ -151,10 +154,11 @@ DBSQLITE ;;
     "dbSettings" : {
         "filename" : "$ETHERPAD_DB_FILENAME"
     },
-DBDIRTY ;;
+DBDIRTY
+        ;;
         *)
             echo
-            echo "ERROR: unknown database type: $ETHERPAD_DB_TYPE"
+            echo "ERROR: unknown database type: '$ETHERPAD_DB_TYPE'"
             exit 1
         ;;
     esac
@@ -172,7 +176,8 @@ DBDIRTY ;;
             "password": "$ETHERPAD_ADMIN_PASSWORD",
             "is_admin": true
         },
-ADMINUSER else
+ADMINUSER
+    else
         # If not set, /admin will not be available!
         echo "WARNING: admin user password not provided, /admin will not be available"
     fi
@@ -232,6 +237,7 @@ ADMINUSER else
             "anonymousReadonly": $ETHERPAD_LDAP_ANONYMOUS_READONLY
         },
 LDAPAUTH
+    fi
 
     if [ ! -z ${ETHERPAD_ADMIN+x} ] || [ ! -z ${ETHERPAD_LDAP+x} ]; then
         read -r -d '' ETHERPAD_USERS <<USERS
@@ -239,7 +245,8 @@ LDAPAUTH
         $ETHERPAD_ADMIN
         $ETHERPAD_LDAP
     },
-USERS fi
+USERS
+    fi
 
     #
     # The complete settings file
@@ -270,7 +277,7 @@ USERS fi
     "editOnly" : false,
     "sessionNoPassword" : false,
     "minify" : true,
-    "maxAge" : 21600, // 60 * 60 * 6 = 6 hours
+    "maxAge" : 21600,
     "abiword" : "/usr/bin/abiword",
     "tidyHtml" : "/usr/bin/tidy",
     "allowUnknownFileEnds" : $ETHERPAD_ALLOW_UNKNOWN_FILE_ENDS,
@@ -284,8 +291,7 @@ USERS fi
     "logconfig" : {
         "appenders": [
             {
-                "type": "console",
-                "category": "access"
+                "type": "console"
             },
             {
                 "type": "file",
