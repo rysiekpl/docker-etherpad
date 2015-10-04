@@ -187,12 +187,12 @@ ADMINUSER
     if [ ! -z ${ETHERPAD_LDAP_URL+x} ]; then
         echo "LDAP url provided, setting up LDAP auth..."
         # required settings
-        [ -z ${ETHERPAD_LDAP_ACCOUNT_BASE+x} ] || {
+        [ -z ${ETHERPAD_LDAP_ACCOUNT_BASE+x} ] && {
             echo
             echo 'ERROR: using LDAP auth and ETHERPAD_LDAP_ACCOUNT_BASE is not set!'
             exit 2
         }
-        [ -z ${ETHERPAD_LDAP_GROUP_SEARCH_BASE+x} ] || {
+        [ -z ${ETHERPAD_LDAP_GROUP_SEARCH_BASE+x} ] && {
             echo
             echo 'ERROR: using LDAP auth and ETHERPAD_LDAP_GROUP_SEARCH_BASE is not set!'
             exit 2
@@ -201,12 +201,12 @@ ADMINUSER
         # if that is not the case...
         if [ ! -z ${ETHERPAD_LDAP_ANONYMOUS_READONLY+x} ] && [ $ETHERPAD_LDAP_ANONYMOUS_READONLY == "false" ]; then
             # make sure we have credentials for non-anonymous binding!
-            [ -z ${ETHERPAD_LDAP_SEARCH_DN+x} ] || {
+            [ -z ${ETHERPAD_LDAP_SEARCH_DN+x} ] && {
                 echo
                 echo 'ERROR: using LDAP auth and ETHERPAD_LDAP_SEARCH_DN is not set though ETHERPAD_LDAP_ANONYMOUS_READONLY is false!'
                 exit 2
             }
-            [ -z ${ETHERPAD_LDAP_SEARCH_PWD+x} ] || {
+            [ -z ${ETHERPAD_LDAP_SEARCH_PWD+x} ] && {
                 echo
                 echo 'ERROR: using LDAP auth and ETHERPAD_LDAP_SEARCH_PWD is not set though ETHERPAD_LDAP_ANONYMOUS_READONLY is false!'
                 exit 2
