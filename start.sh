@@ -106,7 +106,7 @@ fi
         "user"    : "$ETHERPAD_DB_USER",
         "host"    : "$ETHERPAD_DB_HOST",
         "password": "$ETHERPAD_DB_PASSWORD",
-        "database": "$ETHERPAD_DB_DATABASE"
+        "database": "$ETHERPAD_DB_DATABASE",
         "port"    : "$ETHERPAD_DB_PORT"
     },
 DBPOSTGRES
@@ -132,7 +132,7 @@ DBPOSTGRES
         "user"    : "$ETHERPAD_DB_USER",
         "host"    : "$ETHERPAD_DB_HOST",
         "password": "$ETHERPAD_DB_PASSWORD",
-        "database": "$ETHERPAD_DB_DATABASE"
+        "database": "$ETHERPAD_DB_DATABASE",
         "port"    : "$ETHERPAD_DB_PORT"
     },
 DBMYSQL
@@ -233,7 +233,7 @@ ADMINUSER
             "groupAttribute": "$ETHERPAD_LDAP_GROUP_ATTRIBUTE",
             "groupAttributeIsDN": $ETHERPAD_LDAP_GROUP_ATTRIBUTE_IS_DN,
             "searchScope": "$ETHERPAD_LDAP_SEARCH_SCOPE",
-            "groupSearch": "$ETHERPAD_LDAP_GROUP_SEARCH"
+            "groupSearch": "$ETHERPAD_LDAP_GROUP_SEARCH",
             "anonymousReadonly": $ETHERPAD_LDAP_ANONYMOUS_READONLY
         },
 LDAPAUTH
