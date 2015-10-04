@@ -55,26 +55,6 @@ if [ ! -s /opt/etherpad/config/settings.json ]; then
     ETHERPAD_LOG_MAX_LOG_SIZE="${ETHERPAD_LOG_MAX_LOG_SIZE:-1024}"
     ETHERPAD_LOG_BACKUPS="${ETHERPAD_LOG_BACKUPS:-1}" # how many log files there're gonna be at max
 
-    #
-    # SSL settings...
-    #
-    ETHERPAD_SSL=""
-    # ...only if we have a key and a cert
-    if [ ! -z ${ETHERPAD_SSL_KEY+x} ] && [ ! -z ${ETHERPAD_SSL_CERT+x} ]; then
-        # please note, this one's tricky! it should be of the form:
-        # ["/path-to-your/epl-intermediate-cert1.crt", "/path-to-your/epl-intermediate-cert2.crt"]
-        ETHERPAD_SSL_CA="${ETHERPAD_SSL_CA:-[]}"
-
-        # put the SSL settings into the file
-        read -r -d '' ETHERPAD_SSL <<SSL
-    "ssl" : {
-        "key"  : "$ETHERPAD_SSL_KEY",
-        "cert" : "$ETHERPAD_SSL_CERT",
-        "ca": $ETHERPAD_SSL_CA
-    },
-SSL
-fi
-
 
     #
     # Database settings
@@ -108,7 +88,7 @@ fi
         "password": "$ETHERPAD_DB_PASSWORD",
         "database": "$ETHERPAD_DB_DATABASE",
         "port"    : "$ETHERPAD_DB_PORT"
-    },
+    }
 DBPOSTGRES
         ;;
         'mysql')
@@ -134,7 +114,7 @@ DBPOSTGRES
         "password": "$ETHERPAD_DB_PASSWORD",
         "database": "$ETHERPAD_DB_DATABASE",
         "port"    : "$ETHERPAD_DB_PORT"
-    },
+    }
 DBMYSQL
         ;;
         'sqlite')
@@ -143,7 +123,7 @@ DBMYSQL
     "dbType" : "sqlite",
     "dbSettings" : {
         "filename" : "$ETHERPAD_DB_FILENAME"
-    },
+    }
 DBSQLITE
         ;;
         'dirty')
@@ -153,7 +133,7 @@ DBSQLITE
     "dbType" : "dirty",
     "dbSettings" : {
         "filename" : "$ETHERPAD_DB_FILENAME"
-    },
+    }
 DBDIRTY
         ;;
         *)
@@ -163,6 +143,27 @@ DBDIRTY
         ;;
     esac
 
+    
+    #
+    # SSL settings...
+    #
+    ETHERPAD_SSL=""
+    # ...only if we have a key and a cert
+    if [ ! -z ${ETHERPAD_SSL_KEY+x} ] && [ ! -z ${ETHERPAD_SSL_CERT+x} ]; then
+        # please note, this one's tricky! it should be of the form:
+        # ["/path-to-your/epl-intermediate-cert1.crt", "/path-to-your/epl-intermediate-cert2.crt"]
+        ETHERPAD_SSL_CA="${ETHERPAD_SSL_CA:-[]}"
+
+        # put the SSL settings into the file
+        read -r -d '' ETHERPAD_SSL <<SSL
+    "ssl" : {
+        "key"  : "$ETHERPAD_SSL_KEY",
+        "cert" : "$ETHERPAD_SSL_CERT",
+        "ca": $ETHERPAD_SSL_CA
+    }
+SSL
+    fi
+    
 
     #
     # Users and authentication settings
@@ -175,7 +176,7 @@ DBDIRTY
         "admin": {
             "password": "$ETHERPAD_ADMIN_PASSWORD",
             "is_admin": true
-        },
+        }
 ADMINUSER
     else
         # If not set, /admin will not be available!
@@ -235,16 +236,16 @@ ADMINUSER
             "searchScope": "$ETHERPAD_LDAP_SEARCH_SCOPE",
             "groupSearch": "$ETHERPAD_LDAP_GROUP_SEARCH",
             "anonymousReadonly": $ETHERPAD_LDAP_ANONYMOUS_READONLY
-        },
+        }
 LDAPAUTH
     fi
 
     if [ ! -z ${ETHERPAD_ADMIN+x} ] || [ ! -z ${ETHERPAD_LDAP+x} ]; then
+        # get on with it; also make sure that this is valid JSON (no dangling commas, etc)
         read -r -d '' ETHERPAD_USERS <<USERS
     "users": {
-        $ETHERPAD_ADMIN
-        $ETHERPAD_LDAP
-    },
+        $( echo "$ETHERPAD_ADMIN$ETHERPAD_LDAP" | sed -r -e 's/}( +)"/},\n\1"/' )
+    }
 USERS
     fi
 
@@ -252,6 +253,7 @@ USERS
     # The complete settings file
     #
 
+    # remember to make sure that this is valid JSON (no dangling commas, etc)
     cat <<SETTINGS > /opt/etherpad/config/settings.json
 {
     "title": "$ETHERPAD_TITLE",
@@ -301,9 +303,7 @@ USERS
             }
         ]
     },
-    $ETHERPAD_SSL
-    $ETHERPAD_DATABASE
-    $ETHERPAD_USERS
+    $( echo "$ETHERPAD_DATABASE$ETHERPAD_SSL$ETHERPAD_USERS" | sed -r -e 's/}( +)"/},\n\1"/' )
 }
 SETTINGS
 
