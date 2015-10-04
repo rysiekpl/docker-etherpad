@@ -244,7 +244,7 @@ LDAPAUTH
         # get on with it; also make sure that this is valid JSON (no dangling commas, etc)
         read -r -d '' ETHERPAD_USERS <<USERS
     "users": {
-        $( echo "$ETHERPAD_ADMIN$ETHERPAD_LDAP" | sed -r -e 's/}( +)"/},\n\1"/' )
+        $( echo "$ETHERPAD_ADMIN$ETHERPAD_LDAP" | sed -r -e 's/}( *)"/},\n\1"/' )
     }
 USERS
     fi
@@ -303,7 +303,7 @@ USERS
             }
         ]
     },
-    $( echo "$ETHERPAD_DATABASE$ETHERPAD_SSL$ETHERPAD_USERS" | sed -r -e 's/}( +)"/},\n\1"/' )
+    $( echo "$ETHERPAD_DATABASE$ETHERPAD_SSL$ETHERPAD_USERS" | sed -r -e 's/}( *)"/},\n\1"/' )
 }
 SETTINGS
 
