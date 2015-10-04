@@ -16,7 +16,10 @@ RUN apt-get update && \
         build-essential \
         ca-certificates \
         npm \
-        abiword
+        tidy \
+        abiword \
+        --no-install-recommends && \
+    rm -rf /var/lib/apt/lists/*
 
 # yeah, we need that because bin/installDeps.sh looks for node
 # and debian has nodejs
@@ -28,13 +31,10 @@ RUN git clone -b "release/$ETHERPAD_VERSION" --single-branch https://github.com/
 
 # make it sane, security-wise
 RUN groupadd -r etherpad && \
-    useradd -d /opt/etherpad -r -g `getent group etherpad | cut -d: -f3` etherpad
-
-# config file
-ADD settings.json /opt/etherpad/settings.json
-
-# entrypoint script
-ADD start.sh /opt/etherpad/start
+    useradd -d /opt/etherpad -r -g `getent group etherpad | cut -d: -f3` etherpad && \
+    mkdir -p /opt/etherpad/config && \
+    chown -R etherpad:etherpad /opt/etherpad && \
+    ln -s /opt/etherpad/config/settings.json /opt/etherpad/settings.json
 
 # install the deps
 RUN cd /opt/etherpad/ && \
@@ -43,8 +43,12 @@ RUN cd /opt/etherpad/ && \
     bin/installDeps.sh &&
     npm install ep_ldapauth
 
+# entrypoint script
+COPY start.sh /opt/etherpad/start
+    
 # expose, volume
 EXPOSE 9001
+VOLUME ['/opt/etherpad/config/'] # config
 
 # user, workdir
 WORKDIR "/opt/etherpad"
