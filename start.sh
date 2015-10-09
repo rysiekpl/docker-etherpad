@@ -62,6 +62,7 @@ if [ ! -s /opt/etherpad/config/settings.json ]; then
 
     # The Type of the database. You can choose between dirty, postgres, sqlite and mysql
     # You shouldn't use "dirty" for for anything else than testing or development
+    [ -z $ETHERPAD_DB_TYPE ] && ETHERPAD_DB_TYPE="dirty"
     ETHERPAD_DATABASE=""
 
     case "$ETHERPAD_DB_TYPE" in
@@ -215,7 +216,7 @@ ADMINUSER
         fi
         # settings with sane defaults
         ETHERPAD_LDAP_ACCOUNT_PATTERN="${ETHERPAD_LDAP_ACCOUNT_PATTERN:-"(&(objectClass=*)(uid={{username}}))"}"
-        ETHERPAD_LDAP_DISSPLAY_NAME_ATTRIBUTE="${ETHERPAD_LDAP_DISSPLAY_NAME_ATTRIBUTE:-cn}"
+        ETHERPAD_LDAP_DISPLAY_NAME_ATTRIBUTE="${ETHERPAD_LDAP_DISPLAY_NAME_ATTRIBUTE:-cn}"
         ETHERPAD_LDAP_GROUP_ATTRIBUTE="${ETHERPAD_LDAP_GROUP_ATTRIBUTE:-member}"
         ETHERPAD_LDAP_GROUP_ATTRIBUTE_IS_DN="${ETHERPAD_LDAP_GROUP_ATTRIBUTE_IS_DN:-true}"
         ETHERPAD_LDAP_SEARCH_SCOPE="${ETHERPAD_LDAP_SEARCH_SCOPE:-sub}"
@@ -227,7 +228,7 @@ ADMINUSER
             "url": "$ETHERPAD_LDAP_URL",
             "accountBase": "$ETHERPAD_LDAP_ACCOUNT_BASE",
             "accountPattern": "$ETHERPAD_LDAP_ACCOUNT_PATTERN",
-            "displayNameAttribute": "$ETHERPAD_LDAP_DISSPLAY_NAME_ATTRIBUTE",
+            "displayNameAttribute": "$ETHERPAD_LDAP_DISPLAY_NAME_ATTRIBUTE",
             "searchDN": "$ETHERPAD_LDAP_SEARCH_DN",
             "searchPWD": "$ETHERPAD_LDAP_SEARCH_PWD",
             "groupSearchBase": "$ETHERPAD_LDAP_GROUP_SEARCH_BASE",
